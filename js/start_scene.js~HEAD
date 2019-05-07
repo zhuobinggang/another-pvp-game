@@ -1,0 +1,143 @@
+
+<<<<<<< HEAD:tiled-loader/js/start_scene.js
+/**
+ * @Deprecated
+ */
+function addButtonComponentOrigin(sprite){
+  let nowScale = 1
+  let goalScale = 1
+  let maxScale = 0.5
+  let totalDistance = maxScale - goalScale
+  let turnBacktotalDistance = goalScale - maxScale
+  let shouldTurnback = true
+  let over = true
+  let totalSeconds = 0.1 //How many seconds should I spend for changing scale
+  let totalFrames = totalSeconds * 60
+
+  sprite.interactive = true
+  sprite.on('pointerdown', () => {
+    over = false
+    shouldTurnback = false
+  })
+
+  PIXI.ticker.shared.add((elapsedFrame) => {
+    if(!over){
+      if(shouldTurnback){
+         if(nowScale != goalScale){
+          let distance = elapsedFrame / totalFrames * turnBacktotalDistance
+          let nextScale = nowScale + distance
+          if((goalScale - nowScale) * (goalScale - nextScale) < 0){ //Should stop
+            console.warn('should over')
+            nowScale = goalScale
+            shouldTurnback = false
+            over = true
+          }else{
+            nowScale = nextScale
+          }
+          sprite.scale.x = nowScale
+          sprite.scale.y = nowScale
+        } 
+      }else{
+        if(nowScale != maxScale){
+          let distance = elapsedFrame / totalFrames * totalDistance
+          let nextScale = nowScale + distance
+          if((maxScale - nowScale) * (maxScale - nextScale) < 0){ //Should stop
+            console.warn('should stop')
+            nowScale = maxScale
+            shouldTurnback = true
+          }else{
+            nowScale = nextScale
+          }
+          sprite.scale.x = nowScale
+          sprite.scale.y = nowScale
+        }
+      }
+    }
+  })
+}
+
+=======
+>>>>>>> 5af7e0588a0ae6898419497200cd0112fa382e62:tiled-loader/js/start-scene.js
+function loadStartScene(){
+  const paths = {
+    bg: 'assets/design/00_bg.png',
+    bagBtn: 'assets/design/00_btn_bag.png',
+    singleBtn: 'assets/design/00_btn_single.png',
+    multiBtn: 'assets/design/00_btn_multi.png',
+  }
+	return new Promise((resolve, reject) => {
+
+		PIXI.loader
+<<<<<<< HEAD:tiled-loader/js/start_scene.js
+			.add(paths.bg)
+			.add(paths.bagBtn)
+			.add(paths.multiBtn)
+			.add(paths.singleBtn)
+			.load((_, res) => {
+				const container = new PIXI.Container()
+				const background = new PIXI.Sprite(res[paths.bg].texture)
+				const bt1 = new PIXI.Sprite(res[paths.bagBtn].texture)
+				bt1.x = 130
+				bt1.y = 60
+        bt1.anchor.x = 0.5
+        bt1.anchor.y = 0.5
+        addButtonComponent(bt1)
+				const bt2 = new PIXI.Sprite(res[paths.multiBtn].texture)
+				bt2.x = 130
+				bt2.y = 160
+        bt2.anchor.x = 0.5
+        bt2.anchor.y = 0.5
+        addButtonComponent(bt2)
+				const bt3 = new PIXI.Sprite(res[paths.multiBtn].texture)
+				bt3.x = 130
+				bt3.y = 260
+        bt3.anchor.x = 0.5
+        bt3.anchor.y = 0.5
+        addButtonComponent(bt3)
+=======
+			.add('tiled-loader/assets/design/00_bg.png')
+			.add('tiled-loader/assets/design/00_btn_bag.png')
+			.add('tiled-loader/assets/design/00_btn_multi.png')
+			.add('tiled-loader/assets/design/00_btn_single.png')
+			.load((_, res) => {
+				const container = new PIXI.Container()
+				const background = new PIXI.Sprite(res['tiled-loader/assets/design/00_bg.png'].texture)
+				const bt1 = new PIXI.Sprite(res['tiled-loader/assets/design/00_btn_bag.png'].texture)
+				bt1.x = 80
+				bt1.y = 30
+				const bt2 = new PIXI.Sprite(res['tiled-loader/assets/design/00_btn_multi.png'].texture)
+				bt2.x = 80
+				bt2.y = 130
+				const bt3 = new PIXI.Sprite(res['tiled-loader/assets/design/00_btn_single.png'].texture)
+				bt3.x = 80
+				bt3.y = 230
+>>>>>>> 5af7e0588a0ae6898419497200cd0112fa382e62:tiled-loader/js/start-scene.js
+				container.addChild(background)
+				container.addChild(bt1)
+				container.addChild(bt2)
+				container.addChild(bt3)
+				resolve(container)
+			})
+	})
+}
+
+function init(){
+			return loadStartScene()
+				.then(container => {
+					//console.log(container.width)
+					//container = adaptFullScreen(container)
+					return Promise.resolve(container)
+				})
+				.then(container => {
+          let screenWidth = screen.width
+          let screenHeight = screen.height
+          if(screen.width < screen.height){
+            [screenWidth, screenHeight] = [screenHeight, screenWidth]
+          }
+					const scaleX = screenWidth / container.width
+					const scaleY = screenHeight / container.height
+					app.stage.addChild(container)
+					app.stage.scale.x = scaleX
+					app.stage.scale.y = scaleY
+				})
+}

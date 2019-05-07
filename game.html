@@ -1,0 +1,43 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+			body {
+				margin: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<script src="js/pixi.min.js"></script>
+		<script src="js/utils.js"></script>
+		<!--script src="static/js/pixi-tiledmap.min.js"></script-->
+		<script src="js/constants.js"></script>
+		<script src="js/tiled_pixi_loader.js"></script>
+		<script src="js/animation_config.js"></script>
+		<script src="js/planck.js"></script>
+		<script src="js/button.js"></script>
+		<script src="js/popup.js"></script>
+		<script src="js/ready_room.js"></script>
+		<script src="js/multi_game_scene.js"></script>
+		<script src="js/repository_scene.js"></script>
+		<script src="js/start_scene.js"></script>
+		<script src="js/socket.io.js"></script>
+		<script>
+			var app = new PIXI.Application(window.screen.width, window.screen.height, {backgroundColor : 0x1099bb});
+			document.body.appendChild(app.view);
+			
+
+			init()
+/*
+      screen.addEventListener("orientationchange", function () {
+        console.log("The orientation of the screen is: " + screen.orientation);
+      });
+*/
+      window.addEventListener("deviceorientation", () => {
+        console.log('hrer')
+      }, true);
+
+
+		</script>
+	</body>
+</html>

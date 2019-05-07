@@ -1,0 +1,22 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+	<body>
+		<script src="js/pixi.min.js"></script>
+		<!--script src="static/js/pixi-tiledmap.min.js"></script-->
+		<script src="js/tiled-pixi-loader.js"></script>
+		<script>
+			var app = new PIXI.Application(800, 600, {backgroundColor : 0x1099bb});
+			document.body.appendChild(app.view);
+/*
+			TiledLoader
+			  .load('assets/test.json')
+			  .then((buildComponent) => {
+				  const tiledMap = buildComponent()
+				  app.stage.addChild(tileMap)
+			  })
+*/
+		</script>
+	</body>
+</html>

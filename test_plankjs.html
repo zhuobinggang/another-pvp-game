@@ -1,0 +1,71 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+			body {
+				margin: 0;
+			}
+		</style>
+	</head>
+	<body>
+    <!--
+		<script src="js/pixi.min.js"></script>
+		<script src="js/tiled_pixi_loader.js"></script>
+		<script src="js/animation_config.js"></script>
+		<script src="js/multi_game_scene.js"></script>
+    -->
+		<script src="js/planck.js"></script>
+
+  <script>
+/*
+const app = new PIXI.Application(window.screen.width, window.screen.height, {
+	backgroundColor: 0x1099bb
+});
+document.body.appendChild(app.view);
+
+loadMultiGameScene().then(scene => {
+  window.scene = scene;
+  scene.enter();
+});
+*/
+
+const pl = planck
+const world = pl.World()
+
+//TODO: 给人物创建碰撞框然后是一个速度, 看step之后是什么结果
+
+const player =  world.createDynamicBody({
+  type: 'dynamic',
+  position:  pl.Vec2(0.5, 0),
+  linearVelocity: pl.Vec2(5, 0),
+})
+player.createFixture(pl.Circle(0.5), {
+  density: 1,
+  restitution: 1,
+})
+
+const ground = world.createBody({
+  position:  pl.Vec2(3, 0),
+})
+const boxShape = pl.Polygon()
+boxShape._setAsBox(1, 3)
+ground.createFixture(boxShape)
+
+
+console.log('Start position of ball: ')
+console.log(player.getPosition())
+
+const ts = 1/60
+
+for(let i=0;i<60;i++){
+    world.step(ts)
+}
+
+
+console.log('End position of ball: ')
+console.log(player.getPosition())
+
+  
+  </script>
+	</body>
+</html>

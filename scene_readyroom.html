@@ -1,0 +1,112 @@
+<html>
+
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+			<style>* {
+				margin: 0;
+				padding: 0;
+			}
+		</style>
+		</style>
+	</head>
+
+	<body>
+		<script src="js/pixi.min.js"></script>
+		<script src="js/utils.js"></script>
+		<script src="js/constants.js"></script>
+		<script type="text/javascript">
+			let app = new PIXI.Application(window.screen.width, window.screen.height, {
+				backgroundColor: 0x1099bb
+			});
+			document.body.appendChild(app.view);
+			PIXI.loader
+				.add(constants.READY_SCENE_PATH.READY_BG)
+				.add(constants.READY_SCENE_PATH.START_BTN)
+				.add(constants.READY_SCENE_PATH.READY_RETURN_BTN)
+				.add(constants.READY_SCENE_PATH.READY_STATUS)
+				.load((_, res) => {
+					const ready = new PIXI.Container();
+					ready.zIndex = 999;
+					ready.visible = true;
+					(() => {
+						const bg = new PIXI.Sprite(res[constants.READY_SCENE_PATH.READY_BG].texture);
+						ready.addChild(bg);
+
+						const startBtn = new PIXI.Sprite(res[constants.READY_SCENE_PATH.START_BTN].texture);
+						startBtn.anchor.set(0.5);
+						startBtn.position.set(bg.width / 2, 360);
+						ready.addChild(startBtn);
+
+						const returnBtn = new PIXI.Sprite(res[constants.READY_SCENE_PATH.READY_RETURN_BTN].texture);
+						returnBtn.position.set(100, 0);
+						ready.addChild(returnBtn);
+						
+						(() => {
+							for(let i = 0; i < 4; i++) {
+								const readyStatus = new PIXI.Sprite(res[constants.READY_SCENE_PATH.READY_STATUS].texture);
+								readyStatus.position.set(175+i*142, 250);
+								ready.addChild(readyStatus);
+							}
+						})();
+					})();
+					ready.width = 667;
+					ready.height = 375;
+					app.stage.addChild(ready);
+				});
+
+
+    function openSettlementPopup(infos, parentContainer){
+      PIXI.loader
+        .safeAdd(constants.READY_SCENE_PATH.SETTLEMENT_BG)
+        .safeAdd(constants.READY_SCENE_PATH.SETTLEMENT_BTN)
+        .load(() => {
+          const settlementPopup = (() => {
+            const res = PIXI.loader.resources;
+
+            const result = new PIXI.Container();
+            
+            const bg = new PIXI.Sprite(res[constants.READY_SCENE_PATH.SETTLEMENT_BG].texture);
+            result.addChild(bg);
+
+            const retBtn = new PIXI.Sprite(res[constants.READY_SCENE_PATH.SETTLEMENT_BTN].texture);
+            result.addChild(retBtn);
+            retBtn.anchor.set(0.5, 0);
+            retBtn.position.set(result.width / 2 - 25, 330);
+
+            retBtn.interactive = true;
+            retBtn.on('pointerdown', () => {
+              settlementPopup.destroy();
+            });
+
+            return result;
+          })();
+
+          parentContainer.addChild(settlementPopup);
+          //settlementPopup.width = screen.width;
+          //settlementPopup.height = screen.height;
+          window.settlementPopup = settlementPopup;
+
+          // Show info
+          const texts = [];
+          for(let i=0;i<4;i++){
+            const text = new PIXI.Text('Fuck',{fontFamily : 'Arial', fontSize: 18, fill : 'white', align : 'center'});
+            text.anchor.set(0.5);
+            settlementPopup.addChild(text);
+            text.position.set(205 + i * 130 , 200);
+            texts.push(text);
+          }
+
+          for(let i=0;i<infos.length;i++){
+            const info = infos[i];
+            texts[i].text = info.name + '\n' + info.score;
+          }
+
+        });
+    }
+
+
+		</script>
+	</body>
+
+</html>

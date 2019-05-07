@@ -1,0 +1,105 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+	<body>
+
+    <h1>
+      Enter start() in console
+    </h1>
+
+
+		<script src="js/socket.io.js"></script>
+
+<script>
+
+let socket = null;
+
+const constants = {
+  state: {
+    BEFORE_CONNECT: 0,
+    CONNECTED: 1,
+    LOGINED: 2,
+    READY_FOR_GAME: 3,
+    BEFORE_GAME_COUNTDOWN: 4,
+  },
+  status: {
+    SUCCESS: 1000,
+    fAILED: 1001,
+  },
+  event: {
+    CONNECT: 'connect',
+    MATCHED: 'matched',
+    LOGIN: 'login',
+    READY: 'ready',
+  }
+};
+
+const state = {
+  id: constants.state.BEFORE_CONNECT,
+};
+
+function getSocket(){
+  if(state.id == constants.state.BEFORE_CONNECT){
+    throw "Call connect() first";
+  }else{
+    return socket;
+  }
+}
+
+function connect(){
+  return new Promise((resolve, reject) => {
+    socket = io.connect('http://localhost:8000');
+    socket.on('connect', () => {
+      console.log('Connected!');
+      state.id = constants.state.CONNECTED;
+      initListeners(socket);
+      resolve(socket);
+    });
+  });
+}
+
+function initListeners(socket){
+  onMatched(socket);
+}
+
+function onMatched(socket){
+  socket.on(constants.event.MATCHED, (res) => {
+    console.log(res);
+    if(res.ret == constants.status.SUCCESS){
+      state.id = constants.state.BEFORE_GAME_COUNTDOWN;
+    }
+  });
+}
+
+function login(user, pass){
+  getSocket().emit(constants.event.LOGIN, {
+    user,pass,
+  },(res) => {
+    console.log(res);
+    if(res.ret == constants.status.SUCCESS){
+      state.id = constants.state.LOGINED;
+    }else{
+      state.id = constants.state.CONNECTED;
+    }
+  });
+}
+
+function ready(){
+  if(state.id != constants.state.LOGINED){
+    throw "You are in state: " + state.id + ", can not ready.";
+  }else{
+    getSocket().emit(constants.event.READY, (res) => {
+      console.log(res);
+      if(res.ret == constants.status.SUCCESS){
+        state.id = constants.state.READY_FOR_GAME;
+      }
+    });
+  }
+}
+
+
+</script>
+
+	</body>
+</html>

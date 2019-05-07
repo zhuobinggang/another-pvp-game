@@ -1,0 +1,49 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+			body {
+				margin: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<script src="js/SAT.js"></script>
+
+  <script>
+//测试1： 不碰撞
+/*
+|* * * * * * * * * * * * * 
+|* * * * * * * * * * * * * 
+|* * 0 * * * * * * * * * * 
+|* 0 0 0 * * * * * * * * * 
+|* 1 0 * * * * * * * * * * 
+|1 1 1 * * * * * * * * * *
+|* 1 * * * * * * * * * * * 
+*/
+
+const p0 = new SAT.Polygon(new SAT.Vector(), [
+  new SAT.Vector(1, 3),
+  new SAT.Vector(2, 4),
+  new SAT.Vector(3, 3),
+  new SAT.Vector(2, 2),
+]);
+const c1 = new SAT.Circle(new SAT.Vector(1, 1), 1);
+
+let response = new SAT.Response();
+var collided = SAT.testCirclePolygon(c1, p0, response);
+
+console.log('第一次测试结果: ', collided);
+
+
+//测试2： 碰撞
+p0.translate(-1, 0);
+collided = SAT.testCirclePolygon(c1, p0, response);
+console.log('第2次测试结果: ', collided);
+
+
+
+
+  </script>
+	</body>
+</html>

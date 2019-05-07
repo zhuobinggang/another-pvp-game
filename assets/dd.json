@@ -1,0 +1,14 @@
+{ "columns":1,
+ "image":"dd.jpg",
+ "imageheight":400,
+ "imagewidth":400,
+ "margin":0,
+ "name":"dd",
+ "spacing":0,
+ "tilecount":1,
+ "tiledversion":"1.2.2",
+ "tileheight":400,
+ "tilewidth":400,
+ "type":"tileset",
+ "version":1.2
+}

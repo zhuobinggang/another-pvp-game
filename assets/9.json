@@ -1,0 +1,14 @@
+{ "columns":3,
+ "image":"9.png",
+ "imageheight":256,
+ "imagewidth":192,
+ "margin":0,
+ "name":"9",
+ "spacing":0,
+ "tilecount":12,
+ "tiledversion":"1.2.2",
+ "tileheight":64,
+ "tilewidth":64,
+ "type":"tileset",
+ "version":1.2
+}

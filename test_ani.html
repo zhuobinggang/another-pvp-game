@@ -1,0 +1,26 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+			body {
+				margin: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<script src="js/pixi.min.js"></script>
+		<script src="js/animation_config.js"></script>
+		<script src="js/tiled_pixi_loader.js"></script>
+
+  <script>
+  	const app = new PIXI.Application(window.screen.width, window.screen.height, {
+  		backgroundColor: 0x1099bb
+  	});
+    document.body.appendChild(app.view);
+
+    testAnimation();
+    
+  
+  </script>
+	</body>
+</html>

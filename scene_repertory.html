@@ -1,0 +1,66 @@
+<html>
+
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+			<style>* {
+				margin: 0;
+				padding: 0;
+			}
+		</style>
+		</style>
+	</head>
+
+	<body>
+		<script src="js/pixi.min.js"></script>
+		<script src="js/constants.js"></script>
+		<script type="text/javascript">
+			let app = new PIXI.Application(window.screen.width, window.screen.height, {
+				backgroundColor: 0x1099bb
+			});
+			document.body.appendChild(app.view);
+			PIXI.loader
+				.add(constants.REPERTORY_SCENE_PATH.BG)
+				.add(constants.REPERTORY_SCENE_PATH.RETURN_BTN)
+				.add(constants.REPERTORY_SCENE_PATH.LOCK)
+				.add(constants.REPERTORY_SCENE_PATH.SWORD)
+				.add(constants.REPERTORY_SCENE_PATH.GUN)
+				.load((_, res) => {
+					const repertory = new PIXI.Container();
+					repertory.zIndex = 999;
+					repertory.visible = true;
+					(() => {
+						const bg = new PIXI.Sprite(res[constants.REPERTORY_SCENE_PATH.BG].texture);
+						repertory.addChild(bg);
+
+						const returnBtn = new PIXI.Sprite(res[constants.REPERTORY_SCENE_PATH.RETURN_BTN].texture);
+						returnBtn.position.set(10, 10);
+						repertory.addChild(returnBtn);
+						
+						(() => {
+							for(let i = 0; i < 2; i++) {
+								for(let j = 0; j < 4; j++) {
+									if((i==1&&j==0)||(i==1&&j==1))	continue;
+									const lock = new PIXI.Sprite(res[constants.REPERTORY_SCENE_PATH.LOCK].texture);
+									lock.position.set(182+j*107, 115+i*124);
+									repertory.addChild(lock);
+								}
+							}
+						})();
+						
+						const sword = new PIXI.Sprite(res[constants.REPERTORY_SCENE_PATH.SWORD].texture);
+						sword.position.set(182, 239);
+						repertory.addChild(sword);
+						
+						const gun = new PIXI.Sprite(res[constants.REPERTORY_SCENE_PATH.GUN].texture);
+						gun.position.set(289, 239);
+						repertory.addChild(gun);
+					})();
+					repertory.width = 667;
+					repertory.height = 375;
+					app.stage.addChild(repertory);
+				});
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,14 @@
+{ "columns":6,
+ "image":"marisa.png",
+ "imageheight":256,
+ "imagewidth":192,
+ "margin":0,
+ "name":"marisa",
+ "spacing":0,
+ "tilecount":48,
+ "tiledversion":"1.2.1",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":1.2
+}
