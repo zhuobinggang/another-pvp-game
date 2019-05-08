@@ -197,12 +197,19 @@ class Game {
     })
   }
 
+  getCoundownTime(){
+    const me = this;
+    const now = new Date().getTime();
+    return me.MAX_GAME_TIME - (now - me.gameStartedAt);
+  }
+
 
   gameLoop(){
     const me = this;
     const now = new Date().getTime();
     if(now - me.gameStartedAt > me.MAX_GAME_TIME || me.monsterManager.isBossKilled()){
       console.log('GAME OVER');
+      me.room.state = 'LEISURE';
       me.broadCast('game_over', {
         world: me.returnableWorld(),
         monsterRecord: me.monsterManager.getRecord(),

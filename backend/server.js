@@ -76,14 +76,21 @@ function handleReadyRoom(socket){
 
   socket.on('enter_room',(roomId, cb) => {
     console.log('Get enter_room: ' + roomId);
-    socket.join(roomId);
-    rooms[roomId].seats.push(socket.storage.player);
-    socket.storage.room = rooms[roomId];
-    socket.to(roomId).emit('room', returnableRoomInfo(rooms[roomId]));
-    if(cb){
+    if(rooms[roomId].state == 'IN_GAME'){
       cb({
-        ret: 1000,
-      });   
+        ret: 1001,
+        msg: '房间正在游戏中, 还剩下:' + rooms[roomId].game.getCoundownTime(),
+      })
+    }else{
+      socket.join(roomId);
+      rooms[roomId].seats.push(socket.storage.player);
+      socket.storage.room = rooms[roomId];
+      socket.to(roomId).emit('room', returnableRoomInfo(rooms[roomId]));
+      if(cb){
+        cb({
+          ret: 1000,
+        });   
+      }
     }
   });
 
@@ -117,9 +124,10 @@ function handleReadyRoom(socket){
   socket.on('start_game',  () => {
     console.log('On start_game')
 
+    const room = socket.storage.room;
+
     //验证用户是否有开始游戏的权限
     const IAmRoomOwner = (() => {
-      const room = socket.storage.room;
       const owner = room.seats[0];
       if(owner.id == socket.storage.player.id){
         return true;
@@ -128,16 +136,16 @@ function handleReadyRoom(socket){
       }
     })();
     if(IAmRoomOwner){
-
       //初始化游戏房间(room.game);
       socket.storage.room.game = new Game(
-        socket.storage.room, 
+        room, 
         (msg, data) => { // Broadcast callback
-          io.to(socket.storage.room.id).emit(msg, data);
+          io.to(room.id).emit(msg, data);
         },
         () => { // On destroy callback
           console.log('房间清除回掉');
-          socket.storage.room.game = null;
+          room.game = null;
+          room.state = 'LEISURE';
         },
       );
       socket.storage.room.state = 'IN_GAME';

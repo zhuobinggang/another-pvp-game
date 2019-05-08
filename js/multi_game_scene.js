@@ -330,7 +330,7 @@ function loadMultiGameScene(){
                   addButtonComponent(attackBtn);
 
                   attackBtn.addPointDownListner(() => {
-                    if(cooldownConf.canAttack){
+                    if(cooldownConf.canAttack && scene.player.storage.state != 'frozen'){
                       emit('attack', {
                         type: localStorage.getItem('weapon'),
                         //type: 'slimeball',
@@ -385,8 +385,8 @@ function loadMultiGameScene(){
                       scene.addBulletLifeComponent(bullet, originData);
                     }else if(type == 'iceshoot'){
                       const bullet = new PIXI.Sprite(PIXI.loader.resources['assets/iceshoot.png'].texture.clone());
-                      bullet.width = 40;
-                      bullet.height = 60;
+                      bullet.width = 50;
+                      bullet.height = 20;
                       bullet.position.set(pos.x, pos.y);
                       bullet.anchor.set(0.5);
                       bullet.rotation = radian;
@@ -516,6 +516,7 @@ function loadMultiGameScene(){
   
                   //一开始设置不可见，等待后端初始化信息下来才能解除
                   scene.player.visible = false;
+                  scene.player.alpha = 1;
                 }
                 scene.gameResetCallbacks.push(resetPlayer);
 
@@ -837,6 +838,7 @@ function loadMultiGameScene(){
             player.sprite = scene.player;
             player.inited = true;
             scene.player.visible = true;
+            scene.player.alpha = 1;
             scene.movePlayerImmediately(playerId, player.pos.x, player.pos.y)
             scene.player.storage.state = 'ok'; //From fonzen state to ok
 
@@ -1054,6 +1056,14 @@ function loadMultiGameScene(){
             player.sprite.components.hp.set(hp);
           }
 
+          if(player.hp <= 0){
+            player.sprite.alpha = 0.5;
+            if(player.sprite.storage){
+              player.sprite.storage.state = 'frozen';
+              player.sprite.body.setLinearVelocity(planck.Vec2(0, 0));
+            }
+          }
+
           scene.showHpDecrease(hp - originHp, player.sprite.position);
         }
       });
@@ -1108,9 +1118,10 @@ function loadMultiGameScene(){
               scene.container.addChild(sprite);
               monster.sprite = sprite;
               scene.addHpComponent(monster.sprite, monster.hp);
+              scene.popFullScreenImage('assets/alert.png', 3, 0.5);
             });
 
-            scene.popFullScreenImage('assets/boss_cirno.jpeg', 3, 0.5);
+
             //危险公告
             scene.warn('BOSS Appeard!', 'red', 26);
           }
@@ -1246,7 +1257,7 @@ function loadMultiGameScene(){
       sprite.alpha = alpha;
       sprite.width = screen.width;
       sprite.height = screen.height;
-      scene.addSpriteWithLifespan(sprite, 3);
+      window.addSpriteWithLifespan(sprite, 3);
     },
 
     warn: (text = '', color = 'white', size = 18, ) => {
@@ -1257,23 +1268,11 @@ function loadMultiGameScene(){
       const sprite = new PIXI.Text(text, {fontFamily : 'Arial', fontSize: size, fill : color, align : 'center'});
       sprite.anchor.set(0.5);
       sprite.position.set(screen.width / 2, screen.height / 2);
-      scene.addSpriteWithLifespan(sprite, 3, );
+      window.addSpriteWithLifespan(sprite, 3, );
 
       scene.logger = sprite;
     },
 
-    addSpriteWithLifespan: (sprite, lifespan = 3) => {
-      const MAX_LIFE = lifespan * 1000;
-      const startedAt = new Date().getTime();
-      const lifeCycle = () => {
-        if(window.now - startedAt > MAX_LIFE){
-          scene.ticker.remove(lifeCycle);
-          sprite.destroy();
-        }
-      }
-      scene.ticker.add(lifeCycle);
-      scene.camera.container.addChild(sprite);
-    },
 
   }
   return Promise.resolve(scene);

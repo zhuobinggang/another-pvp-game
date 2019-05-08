@@ -185,7 +185,7 @@ function loadMultiPlayerPopup(){
                         //app.stage.scenes.multiGame.enter();
                         app.stage.scenes.readyRoom.enter();
                       }else{
-                        alert('进入房间失败，请重试');
+                        alert('进入房间失败，错误信息: ', cb.msg);
                       }
                     });
                   }
@@ -331,5 +331,38 @@ function init(){
             app.stage.scenes.readyRoom = readyRoomScene;
           })     
       }
+    })
+    .then(() => { //An alternative to window.alert()
+      window.addSpriteWithLifespan = (sprite, lifespan = 3) => {
+        setTimeout(() => {
+          if(!sprite._destroyed){
+            sprite.destroy();
+          }
+        }, lifespan * 1000);
+        app.stage.addChild(sprite);
+      }
+
+      PIXI.loader.safeAdd('assets/alert.png').load(() => {
+        window.alert = (text = '') => {
+          const c = new PIXI.Container();
+          const sprite = new PIXI.Sprite(PIXI.loader.resources['assets/alert.png'].texture.clone());
+          sprite.width = screen.width;
+          sprite.height = screen.height;
+          //点击后alpha = 0
+          sprite.interactive = true;
+          sprite.on('pointerdown', () => {
+            c.destroy();
+          });
+          c.addChild(sprite);
+
+          //Add Text
+          const textSprite = new PIXI.Text(text, {fontFamily : 'Arial', fontSize: 40, fill : 'orange', align : 'center'});
+          textSprite.anchor.set(0.5);
+          textSprite.position.set(screen.width / 2, screen.height / 2);
+          c.addChild(textSprite);
+
+          window.addSpriteWithLifespan(c, 2);
+        }
+      })
     })
 }
