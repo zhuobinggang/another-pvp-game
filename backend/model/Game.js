@@ -221,20 +221,20 @@ class Game {
 
       me.bulletManager.update(me._tickerInterval);
 
-
       //Start 碰撞检测
       for(let bulletId in me.collidableWorld.bulletMap){
         const bulletBody = me.collidableWorld.bulletMap[bulletId];
 
         //检测子弹跟玩家碰撞
         for(let playerId in me.collidableWorld.playerMap){
+          const player = me.world.playerMap[playerId];
+          if(player.dead == true){
+            continue;
+          }
           const playerBody = me.collidableWorld.playerMap[playerId];
-  
           const collided = SAT.testCircleCircle(playerBody, bulletBody);
-
           if(collided){
             const bullet = me.bulletManager.bulletMap[bulletId];
-            const player = me.world.playerMap[playerId];
             if(bullet.type == 'bullet1' || bullet.type == 'slimeball' || bullet.type =='wood_sword' || bullet.type == 'iceshoot'){
               //如果是自己发射的就不扣血
               if(bullet.srcType == 'player' && bullet.srcId == playerId){
@@ -252,6 +252,11 @@ class Game {
                 }
                 //me.bulletManager.remove(bulletId);
                 me.broadCast('hp_change_player', { tarId: playerId, hp: player.hp, });
+
+                //If player dead
+                if(player.hp <= 0){
+                  player.dead = true;
+                }
               }
             }
           }

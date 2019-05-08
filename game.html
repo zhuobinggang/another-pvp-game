@@ -8,6 +8,19 @@
 		</style>
 	</head>
 	<body>
+    <script>
+      document.addEventListener("orientationchange", function(event){
+        console.log("orientation change");
+        switch(window.orientation) 
+        {  
+            case -90: case 90:
+                /* Device is in landscape mode */
+                break; 
+            default:
+                /* Device is in portrait mode */
+        }
+      });
+    </script>
 		<script src="js/pixi.min.js"></script>
 		<script src="js/utils.js"></script>
 		<!--script src="static/js/pixi-tiledmap.min.js"></script-->
@@ -33,10 +46,6 @@
         console.log("The orientation of the screen is: " + screen.orientation);
       });
 */
-      window.addEventListener("deviceorientation", () => {
-        console.log('hrer')
-      }, true);
-
 
 		</script>
 	</body>

@@ -53,6 +53,9 @@ class Monster{
     let result = null;
     for(let id in playerMap){
       const player = playerMap[id];
+      if(player.dead == true){
+        continue;
+      }
       const d = U.distance(player.pos, this.pos);
       if(d < minDist){
         minDist = d;
@@ -73,27 +76,33 @@ class Monster{
     if(now - this.lastDecideAt >= this.decideCooldownTime){
       this.lastDecideAt = now;
       const nearestPlayer = this.nearestPlayer(playerMap);
-      const radian = U.calRadian(this.pos, nearestPlayer.pos);
-
-      //如果太近，就直接发射子弹
-      const distance = U.distance(nearestPlayer.pos, this.pos);
-      if(distance < 20){
-        const stopEvent = this.emitBulletMaybeStop('slimeball', 60, radian, attack);
-        if(stopEvent != null){
-          events.push(stopEvent);
-        }
+      if(nearestPlayer == null){
+        //Do nothing
       }else{
-        const rand = Math.random() * 100;
-        if(rand < 60){//移动
-          const moveEvent = this.move(radian);
-          events.push(moveEvent);
-        }else{//发射子弹
+        const radian = U.calRadian(this.pos, nearestPlayer.pos);
+  
+        //如果太近，就直接发射子弹
+        const distance = U.distance(nearestPlayer.pos, this.pos);
+        if(distance < 20){
           const stopEvent = this.emitBulletMaybeStop('slimeball', 60, radian, attack);
           if(stopEvent != null){
             events.push(stopEvent);
           }
+        }else{
+          const rand = Math.random() * 100;
+          if(rand < 60){//移动
+            const moveEvent = this.move(radian);
+            events.push(moveEvent);
+          }else{//发射子弹
+            const stopEvent = this.emitBulletMaybeStop('slimeball', 60, radian, attack);
+            if(stopEvent != null){
+              events.push(stopEvent);
+            }
+          }
         }
       }
+
+
     }
     return events;
   }
