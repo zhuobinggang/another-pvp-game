@@ -28,11 +28,15 @@ function loadStartScene(){
           bt2.anchor.y = 0.5
           addButtonComponent(bt2)
           bt2.addPointDownListner(() => {
+            tryEnterRoom(0);
+            //TODO: 虽然现在只有房间0, 不要删除下面的注释
+            /*
             if(app.stage.popups[constants.POPUPS.JOIN_ROOM]){
               app.stage.popups[constants.POPUPS.JOIN_ROOM].open()
             }else{
               console.warn(`There is no popup named ${constants.POPUPS.JOIN_ROOM} has been loaded`)
             }
+            */
           });
           return bt2
         })();
@@ -41,7 +45,10 @@ function loadStartScene(){
 				bt3.y = 260
         bt3.anchor.x = 0.5
         bt3.anchor.y = 0.5
-        addButtonComponent(bt3)
+        addButtonComponent(bt3);
+        bt3.addPointDownListner(() => {
+          window.alert('施工中...请移步多人游戏');
+        });
 				container.addChild(background)
 				container.addChild(bt1)
 				container.addChild(bt2)
@@ -85,7 +92,7 @@ function loadMultiPlayerPopup(){
                 c.addChild(bg);
 
                 const closeBtn = new PIXI.Sprite(res[constants.START_SCENE_PATH.CLOSE_BTN].texture); 
-                closeBtn.position.set(320,15);                window.closeBtn=closeBtn;
+                closeBtn.position.set(320,15);                
                 addButtonComponent(closeBtn, 0.8);
                 closeBtn.addPointDownListner(() => {
                   popup.close();
@@ -172,63 +179,7 @@ function loadMultiPlayerPopup(){
                 confirmBtn.position.set(bg.width /2, 355);
                 addButtonComponent(confirmBtn);
                 confirmBtn.addPointDownListner(() => {
-                  /*
-                  console.log('TODO: 直接进入地图等待其他玩家');
-                  app.stage.scenes.start.quit();
-                  //app.stage.scenes.multiGame.enter();
-                  app.stage.scenes.readyRoom.enter();
-                  */
-                  function changeSceneToReadyRoom(){
-                    socket.emit('enter_room', 0, (cb) => {
-                      if(cb.ret == 1000){
-                        app.stage.scenes.start.quit();
-                        //app.stage.scenes.multiGame.enter();
-                        app.stage.scenes.readyRoom.enter();
-                      }else{
-                        alert('进入房间失败，错误信息: ', cb.msg);
-                      }
-                    });
-                  }
-
-                  //如何判断是断联然后
-
-                  if(null == window.io){
-                    alert('必须引入socketio用与服务器通讯')
-                  }else if(null != window.socket){
-                    if(socket.connected){
-                      changeSceneToReadyRoom();
-                    }else{
-                      socket.connect();
-                      alert('连接已断开， 请重试');
-                    }
-                  }else{
-                    alert('尚未连接服务器， 请重试');
-
-                    //139.199.73.230
-                    window.socket = io.connect('http://139.199.73.230:8000', {
-                      reconnection: false,
-                      secure: false,
-                    });
-
-                    /*
-                    window.socket = io.connect('http://localhost:8000', {
-                      reconnection: false,
-                    });
-                    */
-                    socket.on('connect', () => {
-                      console.log('Connected!')
-                      //每次重新连接都要重新获取角色信息
-                      socket.emit('player_info', (info) => {
-                        if(info.ret != 1000){
-                          alert("获取用户信息失败, 请重试");
-                          socket.disconnect();
-                        }else{
-                          console.log("Get player info successfully");
-                          app.storage.playerInfo = info.data;
-                        }
-                      })
-                    })
-                  }
+                  tryEnterRoom(0);
                 });
                 c.addChild(confirmBtn);
 
@@ -273,6 +224,60 @@ function loadMultiPlayerPopup(){
           resolve(popup)
         });
   })
+}
+
+
+function tryEnterRoom(roomNum = 0){
+  function changeSceneToReadyRoom(){
+    socket.emit('enter_room', roomNum, (cb) => {
+      if(cb.ret == 1000){
+        app.stage.scenes.start.quit();
+        //app.stage.scenes.multiGame.enter();
+        app.stage.scenes.readyRoom.enter();
+      }else{
+        alert('进入房间失败，错误信息: ', cb.msg);
+      }
+    });
+  }
+
+  if(null == window.io){
+    alert('必须引入socketio用与服务器通讯')
+  }else if(null != window.socket){
+    if(socket.connected){
+      changeSceneToReadyRoom();
+    }else{
+      socket.connect();
+      alert('连接已断开， 请重试');
+    }
+  }else{
+    alert('已尝试连接服务器, 请重试');
+
+    //139.199.73.230
+    window.socket = io.connect('http://139.199.73.230:8000', {
+      reconnection: false,
+      secure: false,
+    });
+
+    /*
+    window.socket = io.connect('http://localhost:8000', {
+      reconnection: false,
+    });
+    */
+    socket.on('connect', () => {
+      console.log('Connected!')
+      //每次重新连接都要重新获取角色信息
+      socket.emit('player_info', (info) => {
+        if(info.ret != 1000){
+          alert("获取用户信息失败, 请重试");
+          socket.disconnect();
+        }else{
+          console.log("Get player info successfully");
+          app.storage.playerInfo = info.data;
+        }
+      })
+    })
+  }
+
 }
 
 
@@ -345,7 +350,7 @@ function init(){
       }
 
       PIXI.loader.safeAdd('assets/alert.png').load(() => {
-        window.alert = (text = '') => {
+        window.alert = (text = '', lifeSpan = 2) => {
           const c = new PIXI.Container();
           const sprite = new PIXI.Sprite(PIXI.loader.resources['assets/alert.png'].texture.clone());
           sprite.width = screen.width;
@@ -363,7 +368,7 @@ function init(){
           textSprite.position.set(screen.width / 2, window.getScreenHeight() / 2);
           c.addChild(textSprite);
 
-          window.addSpriteWithLifespan(c, 2);
+          window.addSpriteWithLifespan(c, lifeSpan);
         }
       })
       return null;

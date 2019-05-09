@@ -19,7 +19,8 @@ var ShrinkState = /** @class */ (function () {
     ShrinkState.prototype.update = function (frames) {
         var distance = frames / this.totalFrames * this.totalDistance;
         var nextScale = this.context.currentScale + distance;
-        if ((this.context.minScale - this.context.currentScale) * (this.context.minScale - nextScale) < 0) {
+        //if ((this.context.minScale - this.context.currentScale) * (this.context.minScale - nextScale) < 0) {
+        if (this.context.currentScale < this.context.minScale) {
             this.context.currentScale = this.context.minScale;
             this.context.state = this.context.expandState;
             this.context.state.init ? this.context.state.init() : null;
@@ -43,7 +44,8 @@ var ExpandState = /** @class */ (function () {
     ExpandState.prototype.update = function (frames) {
         var distance = frames / this.totalFrames * this.totalDistance;
         var nextScale = this.context.currentScale + distance;
-        if ((this.context.initialScale - this.context.currentScale) * (this.context.initialScale - nextScale) < 0) {
+        //if ((this.context.initialScale - this.context.currentScale) * (this.context.initialScale - nextScale) < 0) {
+        if (this.context.currentScale > this.context.initialScale) {
             this.context.currentScale = this.context.initialScale;
             this.context.state = this.context.leisureState;
             this.context.state.init ? this.context.state.init() : null;

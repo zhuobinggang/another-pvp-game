@@ -3,10 +3,13 @@ loadRepositoryScene = () => {
     inited: false,
     container: null,
     G: null, 
+    roleG: null,
     weaponMap: {},
+    roleMap: {},
     enter: () => {
       if(!scene.inited){
         scene.inited = true;
+        window.alert('Loading...');
         scene.init().then(() => {
           scene.enter();
         });
@@ -20,6 +23,7 @@ loadRepositoryScene = () => {
           scene.switchWeapon(cachedWeapon);
         }
 
+        scene.switchRole('marisa');
       }
     }, 
     initGlobalConfiguration: () => {
@@ -45,6 +49,7 @@ loadRepositoryScene = () => {
   				.add(constants.REPERTORY_SCENE_PATH.LOCK)
   				.add(constants.REPERTORY_SCENE_PATH.SWORD)
   				.add(constants.REPERTORY_SCENE_PATH.GUN)
+  				.add('assets/role_marisa.png')
   				.load((_, res) => {
   					const repertory = scene.container;
   					repertory.zIndex = 999;
@@ -65,13 +70,27 @@ loadRepositoryScene = () => {
   						(() => {
   							for(let i = 0; i < 2; i++) {
   								for(let j = 0; j < 4; j++) {
-  									if((i==1&&j==0)||(i==1&&j==1))	continue;
+  									if((i==0&&j==0)||(i==1&&j==0)||(i==1&&j==1))	continue;
   									const lock = new PIXI.Sprite(res[constants.REPERTORY_SCENE_PATH.LOCK].texture);
   									lock.position.set(182+j*107, 115+i*124);
   									repertory.addChild(lock);
   								}
   							}
   						})();
+
+              const marisa = new PIXI.Sprite(res['assets/role_marisa.png'].texture);
+              window.marisa = marisa;
+              marisa.width = 58;
+              marisa.height = 58;
+  						marisa.position.set(182, 115);
+  						repertory.addChild(marisa);
+              scene.roleMap['marisa'] = marisa;
+              /*
+              sword.interactive = true;
+              sword.on('pointerdown', () => {
+                scene.switchRole('marisa');
+              });
+              */
   						
   						const sword = new PIXI.Sprite(res[constants.REPERTORY_SCENE_PATH.SWORD].texture);
   						sword.position.set(182, 239);
@@ -109,6 +128,8 @@ loadRepositoryScene = () => {
     initHighlight: () => {
       scene.G = new PIXI.Graphics();
       scene.container.addChild(scene.G);
+      scene.roleG = new PIXI.Graphics();
+      scene.container.addChild(scene.roleG);
     },
     highlightWeapon: (sprite) => {
       if(sprite != null){
@@ -124,6 +145,25 @@ loadRepositoryScene = () => {
         G.lineTo(sprite.x, sprite.y);
         G.endFill();
       }
+    },
+    highlightRole: (sprite) => {
+      if(sprite != null){
+        //完成选中高亮功能
+        const G = scene.roleG;
+        G.clear();
+        G.beginFill(0, 0);
+        G.lineStyle(3, 0x21BC00);
+        G.moveTo(sprite.x, sprite.y);
+        G.lineTo(sprite.x + sprite.width, sprite.y);
+        G.lineTo(sprite.x + sprite.width, sprite.y + sprite.height);
+        G.lineTo(sprite.x, sprite.y + sprite.height);
+        G.lineTo(sprite.x, sprite.y);
+        G.endFill();
+      }
+    },
+    switchRole: (name) => {
+      const sprite = scene.roleMap[name];
+      scene.highlightRole(sprite);
     },
   }
 
