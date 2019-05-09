@@ -206,6 +206,7 @@ function loadMultiPlayerPopup(){
 
                     window.socket = io.connect('http://139.199.73.230:8000', {
                       reconnection: false,
+                      secure: false,
                     });
 
                     /*
