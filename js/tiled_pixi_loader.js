@@ -350,7 +350,7 @@ function load(url) {
 
 
 function demo(url){
-	const demo = new PIXI.Application(window.screen.width, window.screen.height, {backgroundColor : 0x1099bb});
+	const demo = new PIXI.Application(window.innerWidth, window.innerHeight, {backgroundColor : 0x1099bb});
 	document.body.appendChild(demo.view);
   window.demo = demo;
   return loadTiledMap(url).then(tm => {

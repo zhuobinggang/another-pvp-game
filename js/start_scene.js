@@ -239,8 +239,8 @@ function loadMultiPlayerPopup(){
               
               (() => {//Set scale and pivot
                 const width = screen.width / 2;
-                const height = screen.height * 2 / 3;
-                c.position.set(screen.width / 2,screen.height / 2);
+                const height = window.getScreenHeight() * 2 / 3;
+                c.position.set(screen.width / 2, window.getScreenHeight() / 2);
                 c.pivot.set(c.width / 2, c.height / 2);
                 c.scale.set(constants.POPUPS.JOIN_ROOM_SCALE);
                 window.c = c;
@@ -298,15 +298,8 @@ function init(){
     })
     .then(([startScene, popup, multiGameScene]) => { //start scene
       app.stage.scenes[constants.SCENES.START] = startScene;
-      let screenWidth = screen.width;
-      let screenHeight = screen.height;
-      if(screen.width < screen.height){
-        [screenWidth, screenHeight] = [screenHeight, screenWidth]
-      }
-  		const scaleX = screenWidth / startScene.container.width
-  		const scaleY = screenHeight / startScene.container.height
-      startScene.container.scale.x = scaleX;
-      startScene.container.scale.y = scaleY;
+      startScene.container.width = window.getScreenWidth();
+      startScene.container.height = window.getScreenHeight();
   		app.stage.addChild(startScene.container);
       return Promise.resolve([popup, multiGameScene]);
     })
@@ -354,7 +347,7 @@ function init(){
           const c = new PIXI.Container();
           const sprite = new PIXI.Sprite(PIXI.loader.resources['assets/alert.png'].texture.clone());
           sprite.width = screen.width;
-          sprite.height = screen.height;
+          sprite.height = window.getScreenHeight();
           //点击后alpha = 0
           sprite.interactive = true;
           sprite.on('pointerdown', () => {
@@ -365,7 +358,7 @@ function init(){
           //Add Text
           const textSprite = new PIXI.Text(text, {fontFamily : 'Arial', fontSize: 40, fill : 'orange', align : 'center'});
           textSprite.anchor.set(0.5);
-          textSprite.position.set(screen.width / 2, screen.height / 2);
+          textSprite.position.set(screen.width / 2, window.getScreenHeight() / 2);
           c.addChild(textSprite);
 
           window.addSpriteWithLifespan(c, 2);

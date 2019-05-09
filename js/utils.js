@@ -1,4 +1,13 @@
 
+window.getScreenHeight = () => {
+  return window.innerHeight;
+}
+
+window.getScreenWidth = () => {
+  return window.innerWidth;
+}
+
+
 PIXI.loader.safeAdd = (path) => {
   if(PIXI.loader.resources[path] != null){
     return PIXI.loader

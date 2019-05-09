@@ -105,13 +105,13 @@ function loadMultiGameScene(){
           .then(() => { //init camera
             const camera = {
               x: screen.width / 2, 
-              y: screen.height / 2,
+              y: window.getScreenHeight() / 2,
               container: new PIXI.Container(),
               moveTo: (x, y) => {
 
                 (() => {
                   const HFW = screen.width / 2
-                  const HFH = screen.height / 2
+                  const HFH = window.getScreenHeight() / 2
                   x = Math.max(HFW, x)
                   y = Math.max(HFH, y)
                   const b = scene.container.getBounds()
@@ -148,7 +148,7 @@ function loadMultiGameScene(){
 
             const joystick = {
               x: 60,
-              y: 300,
+              y: window.getScreenHeight() - 40,
               //radian: 0,
               offX: 0, // Where is hhe frontCircle 
               offY: 0,
@@ -285,7 +285,7 @@ function loadMultiGameScene(){
                   }
 
                   const attackBtnPos = {
-                    x: 500, y: 300,
+                    x: 500, y: window.getScreenHeight() - 40,
                   }
 
 
@@ -330,6 +330,7 @@ function loadMultiGameScene(){
                   addButtonComponent(attackBtn);
 
                   attackBtn.addPointDownListner(() => {
+                    console.log('Attack  btn down!');
                     if(cooldownConf.canAttack && scene.player.storage.state != 'frozen'){
                       emit('attack', {
                         type: localStorage.getItem('weapon'),
@@ -400,7 +401,7 @@ function loadMultiGameScene(){
                 })(
                   scene, 
                   PIXI.loader.resources['assets/attack_button.png'].texture,
-                  PIXI.loader.resources['assets/bullet1.png'].texture,
+                  PIXI.loader.resources['assets/bullet1.png'].texture
                 ); 
               })
             });
@@ -734,7 +735,7 @@ function loadMultiGameScene(){
           scene.ticker.add(scene.sendPosLoop);
         })();
 
-        scene.warn('Wait for other players ...', );
+        scene.warn('Wait for other players ...' );
       }
     },
     quit: () => {
@@ -1002,7 +1003,7 @@ function loadMultiGameScene(){
         scene.updatePlayersFromWorldMsg(world.playerMap);
         scene.updateMonstersFromWorldMsg(world.monsterMap);
 
-        scene.warn('Game started! \n Kill all mobs!', );
+        scene.warn('Game started! \n Kill all mobs!');
 
         //Countdown
         const countdownSprite = new PIXI.Text(999, {fontFamily : 'Arial', fontSize: 26, fill : 'white', align : 'center'});
@@ -1256,19 +1257,19 @@ function loadMultiGameScene(){
       const sprite = new PIXI.Sprite(PIXI.loader.resources[imgPath].texture.clone());
       sprite.alpha = alpha;
       sprite.width = screen.width;
-      sprite.height = screen.height;
+      sprite.height = window.getScreenHeight();
       window.addSpriteWithLifespan(sprite, 3);
     },
 
-    warn: (text = '', color = 'white', size = 18, ) => {
+    warn: (text = '', color = 'white', size = 18) => {
       if(scene.logger != null){
         scene.logger.alpha = 0;
       }
 
       const sprite = new PIXI.Text(text, {fontFamily : 'Arial', fontSize: size, fill : color, align : 'center'});
       sprite.anchor.set(0.5);
-      sprite.position.set(screen.width / 2, screen.height / 2);
-      window.addSpriteWithLifespan(sprite, 3, );
+      sprite.position.set(screen.width / 2, window.getScreenHeight() / 2);
+      window.addSpriteWithLifespan(sprite, 3);
 
       scene.logger = sprite;
     },

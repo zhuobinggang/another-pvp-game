@@ -166,38 +166,46 @@ class Monster{
       this.lastDecideAt = now;
 
       const nearestPlayer = this.nearestPlayer(playerMap);
-      const radian = U.calRadian(this.pos, nearestPlayer.pos);
-      const distance = U.distance(nearestPlayer.pos, this.pos);
-
-      //console.log('Nearest Distance: ',distance);
-
-      //AOE, 单体攻击，移动
-
-      if(distance < 20){ //单体攻击
-        const stopEvent = this.emitBulletMaybeStop('iceshoot',70, radian, attack);
-        if(stopEvent != null){
-          events.push(stopEvent);
-        }
+      if(nearestPlayer == null){
+        //Do nothing..
       }else{
-        const rand = Math.random() * 100;
-        if(rand < 50){ //移动
-          const moveEvent = this.move(radian);
-          events.push(moveEvent);
-        }else if(rand < 75){ //单体攻击
-          //this.emitBulletMaybeStop('iceshoot',70, radian, attack, );
+
+        const radian = U.calRadian(this.pos, nearestPlayer.pos);
+        const distance = U.distance(nearestPlayer.pos, this.pos);
+  
+        //console.log('Nearest Distance: ',distance);
+  
+        //AOE, 单体攻击，移动
+  
+        if(distance < 20){ //单体攻击
           const stopEvent = this.emitBulletMaybeStop('iceshoot',70, radian, attack);
           if(stopEvent != null){
             events.push(stopEvent);
           }
-        }else{ //AOE
-          //TODO: 进行AOE攻击
-          //this.emitBulletMaybeStop('iceshoot',70, radian, attack);
-          const stopEvent = this.emitBulletMaybeStop('iceshoot',70, radian, attack);
-          if(stopEvent != null){
-            events.push(stopEvent);
+        }else{
+          const rand = Math.random() * 100;
+          if(rand < 50){ //移动
+            const moveEvent = this.move(radian);
+            events.push(moveEvent);
+          }else if(rand < 75){ //单体攻击
+            //this.emitBulletMaybeStop('iceshoot',70, radian, attack, );
+            const stopEvent = this.emitBulletMaybeStop('iceshoot',70, radian, attack);
+            if(stopEvent != null){
+              events.push(stopEvent);
+            }
+          }else{ //AOE
+            //TODO: 进行AOE攻击
+            //this.emitBulletMaybeStop('iceshoot',70, radian, attack);
+            const stopEvent = this.emitBulletMaybeStop('iceshoot',70, radian, attack);
+            if(stopEvent != null){
+              events.push(stopEvent);
+            }
           }
         }
+      
+      
       }
+
     }
     return events;
   }

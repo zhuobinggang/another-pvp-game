@@ -93,7 +93,7 @@ loadRepositoryScene = () => {
 
   					})();
   					repertory.width = screen.width;
-  					repertory.height = screen.height;
+  					repertory.height = window.getScreenHeight();
 
             app.stage.addChild(repertory);
   					//scene.container.addChild(repertory);

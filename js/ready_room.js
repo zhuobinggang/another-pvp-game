@@ -82,7 +82,7 @@ function loadReadyRoomScene(){
 
   					})();
   					ready.width = screen.width;
-  					ready.height = screen.height;
+  					ready.height = window.getScreenHeight();
 
             app.stage.addChild(ready);
 
@@ -273,8 +273,6 @@ function loadReadyRoomScene(){
           })();
 
           parentContainer.addChild(settlementPopup);
-          //settlementPopup.width = screen.width;
-          //settlementPopup.height = screen.height;
           
           // Show info
           const texts = [];
@@ -293,6 +291,10 @@ function loadReadyRoomScene(){
               texts[i].style.fill = 'yellow';
             }
           }
+
+
+          parentContainer.height = window.getScreenHeight();
+          parentContainer.width = window.getScreenWidth();
         });
     },
   }
