@@ -205,7 +205,7 @@ function loadMultiPlayerPopup(){
                     alert('尚未连接服务器， 请重试');
 
                     //139.199.73.230
-                    window.socket = io.connect('http://localhost:8000', {
+                    window.socket = io.connect('http://139.199.73.230:8000', {
                       reconnection: false,
                       secure: false,
                     });
