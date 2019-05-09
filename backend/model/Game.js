@@ -115,7 +115,7 @@ class Game {
         const player = me.playerMap[playerId];
         result[playerId] = {
           pos: {
-            x: 100 * count,
+            x: 50 * count,
             y: 50,
           },
           //score: Math.floor(Math.random() * 100),

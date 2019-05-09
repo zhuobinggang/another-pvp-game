@@ -1,0 +1,27 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+			body {
+				margin: 0;
+			}
+		</style>
+	</head>
+	<body>
+    <a href="game.html">Game</a>
+    <script>
+      document.addEventListener("orientationchange", function(event){
+        console.log("orientation change");
+        switch(window.orientation) 
+        {  
+            case -90: case 90:
+                /* Device is in landscape mode */
+                break; 
+            default:
+                /* Device is in portrait mode */
+        }
+      });
+    </script>
+
+	</body>
+</html>

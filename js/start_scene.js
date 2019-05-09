@@ -203,9 +203,16 @@ function loadMultiPlayerPopup(){
                     }
                   }else{
                     alert('尚未连接服务器， 请重试');
+
+                    window.socket = io.connect('http://139.199.73.230:8000', {
+                      reconnection: false,
+                    });
+
+                    /*
                     window.socket = io.connect('http://localhost:8000', {
                       reconnection: false,
                     });
+                    */
                     socket.on('connect', () => {
                       console.log('Connected!')
                       //每次重新连接都要重新获取角色信息
