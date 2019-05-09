@@ -152,8 +152,8 @@ function loadMultiGameScene(){
               //radian: 0,
               offX: 0, // Where is hhe frontCircle 
               offY: 0,
-              radiusFront: 15,
-              radiusBack: 30,
+              radiusFront: 20,
+              radiusBack: 40,
               pointerDownOnMe: false,
             }
 
@@ -564,7 +564,7 @@ function loadMultiGameScene(){
           .then(() => { //Init player controll
             const joystick = scene.joystick;
             const player = scene.player;
-            const rate = 2;
+            const rate = 2.5;
             const pl = planck;
             scene.ticker.add((t) => {
               const pos = player.body.getPosition();
