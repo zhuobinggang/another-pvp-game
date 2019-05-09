@@ -147,8 +147,8 @@ function loadMultiGameScene(){
             window.camera = scene.camera;
 
             const joystick = {
-              x: 60,
-              y: window.getScreenHeight() - 40,
+              x: 80,
+              y: window.getScreenHeight() - 50,
               //radian: 0,
               offX: 0, // Where is hhe frontCircle 
               offY: 0,
