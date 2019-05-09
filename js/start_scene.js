@@ -364,5 +364,11 @@ function init(){
           window.addSpriteWithLifespan(c, 2);
         }
       })
+      return null;
+    })
+    .then(() => {
+      if(window.localStorage.getItem('weapon') == null || window.localStorage.getItem('weapon') == ''){
+        window.localStorage.setItem('weapon', 'bullet1');
+      }
     })
 }

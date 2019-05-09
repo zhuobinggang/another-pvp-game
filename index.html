@@ -8,19 +8,25 @@
 		</style>
 	</head>
 	<body>
-    <a href="game.html">Game</a>
+    
     <script>
-      document.addEventListener("orientationchange", function(event){
-        console.log("orientation change");
-        switch(window.orientation) 
-        {  
-            case -90: case 90:
-                /* Device is in landscape mode */
-                break; 
-            default:
-                /* Device is in portrait mode */
-        }
-      });
+      if(window.orientation != null && window.orientation == 0){
+        alert('请开启横屏模式并刷新网页! \n Please switch to the orientation of landscape then refresh the site!');
+
+        document.body.innerHTML += '<p>请开启横屏模式并刷新网页! </p> <br/> <p> Please switch to the orientation of landscape then refresh the site! </p>';
+
+        document.body.innerHTML += '<br/><hr></hr>';
+
+        document.body.innerHTML += '<br/><br/><h3>如何开启横屏? </h3>';
+        document.body.innerHTML += '<br/><p>打开下拉菜单，取消"方向锁定"，横屏后刷新</p>';
+
+
+        document.body.innerHTML += '<br/><br/><h3>How to change the orientation? </h3>';
+        document.body.innerHTML += '<br/><p>On the drop-down menu, disable “Rotation Locked”, then move your mobile to landscape mode.</p>';
+      }else{
+        document.body.innerHTML += '<p>Have fun!</p><br/>';
+        document.body.innerHTML += '<a href="game.html">Game</a>';
+      }
     </script>
 
 	</body>
